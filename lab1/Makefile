@@ -1,15 +1,15 @@
 NAME='matrix'
 
-CCFLAGS=-O2 -pipe -Wall
-DFLAGS=$(CFLAGS) -ggdb
-
-default: release
+CCFLAGS=-pipe
+DFLAGS=$(CCFLAGS) -ggdb -Wall
+RFLAGS=$(CCFLAGS) -O2
+default: debug 
 
 debug: clean
 		gcc $(DFLAGS) -o $(NAME) matrix.c
 
 release: clean
-		gcc $(CCFLAGS) -o $(NAME) matrix.c
+		gcc $(RFLAGS) -o $(NAME) matrix.c
 
 clean:
 		rm -rf *.o
