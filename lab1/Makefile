@@ -1,16 +1,23 @@
-NAME='matrix'
+NAME=matrix
 
-CCFLAGS=-pipe
-DFLAGS=$(CCFLAGS) -ggdb -Wall
-RFLAGS=$(CCFLAGS) -O2
-default: debug 
+CC=gcc
+CC_FLAGS=-pipe
+CC_DEBUG_FLAGS=-ggdb -Wall
+CC_RELEASE_FLAGS=-O2
 
-debug: clean
-		gcc $(DFLAGS) -o $(NAME) matrix.c
+ICC=icc
+ICC_FLAGS=-vec -axSSE2 -vec_report3
 
-release: clean
-		gcc $(RFLAGS) -o $(NAME) matrix.c
+default: gcc-debug
+
+gcc-debug:
+	$(CC) $(CC_FLAGS) $(CC_DEBUG_FLAGS) -o $(NAME)-$@ *.c
+
+gcc:
+	$(CC) $(CC_FLAGS) $(CC_RELEASE_FLAGS) -o $(NAME)-$@ *.c
+
+icc:
+	$(ICC) $(ICC_FLAGS) -o $(NAME)-$@ *.c
 
 clean:
-		rm -rf *.o
-		rm -rf $(NAME)
+	rm -rf $(NAME)-gcc $(NAME)-gcc-debug $(NAME)-icc
