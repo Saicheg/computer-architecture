@@ -9,8 +9,16 @@ float *** matrix_b;
 float *** matrix_result;
 int i, j, k;
 
+unsigned long long int rdtsc()
+{
+  unsigned long long int c,d;
+  asm volatile("rdtsc" : "=a" (c), "=d" (d));  //assembly code running the instruction
+  return c | (d << 32); // calculating the tick value.
+}
+
 int main() {
-  prepareMatrixes();
+  srand(time(NULL));
+  createMatrixes();
 
   compute();
 
@@ -20,21 +28,21 @@ int main() {
   return 0;
 }
 
-void prepareMatrixes() {
-  srand(time(NULL));
-  createMatrix(&matrix_a);
-  createMatrix(&matrix_b);
-  createMatrix(&matrix_result);
-}
-
-void createMatrix(float **** matrix) {
-  (*matrix) = (float***) calloc(N, sizeof(float**));
+void createMatrixes() {
+  matrix_a = (float***) calloc(N, sizeof(float**));
+  matrix_b = (float***) calloc(N, sizeof(float**));
+  matrix_result = (float***) calloc(N, sizeof(float**));
   for (i = 0; i < N; i++) {
-    (*matrix)[i] = (float**) calloc(N, sizeof(float*));
+    matrix_a[i] = (float**) calloc(N, sizeof(float*));
+    matrix_b[i] = (float**) calloc(N, sizeof(float*));
+    matrix_result[i] = (float**) calloc(N, sizeof(float*));
     for (j = 0; j < N; j++) {
-      (*matrix)[i][j] =  (float*) calloc(K*K, sizeof(float));
+      matrix_a[i][j] =  (float*) calloc(K*K, sizeof(float));
+      matrix_b[i][j] =  (float*) calloc(K*K, sizeof(float));
+      matrix_result[i][j] =  (float*) calloc(K*K, sizeof(float));
       for (k = 0; k < K*K; k++) {
-        (*matrix)[i][j][k] = (float) rand() / (float) FLOATMAX;
+        matrix_a[i][j][k] = (float) rand() / (float) FLOATMAX;
+        matrix_b[i][j][k] = (float) rand() / (float) FLOATMAX;
       }
     }
   }
@@ -51,17 +59,33 @@ void freeMatrix(float **** matrix) {
   (*matrix) = NULL;
 }
 
-void compute() {
-  int i, j, k;
-  struct timespec time1, time2;
-  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
-  for (i = 0; i < N; i++) {
-    for (j = 0; j < N; j++) {
-      for (k = 0; k < K*K; k++) {
-        matrix_result[i][j][k] = matrix_a[i][j][k] * matrix_b[i][j][k];
+void computeMatrix(float * a, float * b, float * result) {
+  for (int i = 0; i < K; i++) {
+    for (int j = 0; j < K; j++) {
+      for (int k = 0; k < K; k++) {
+        result[i*4+j] += a[i*4+k]*b[j*4+k];
       }
     }
   }
-  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
-  printf("Calculation time is %ld ns.\n", time2.tv_nsec - time1.tv_nsec);
 }
+
+void compute() {
+  int i, j;
+  unsigned long long time1, time2;
+  time1 = rdtsc();
+  #ifdef _OPENMP
+    #pragma omp parallel for
+  #endif
+  for (i = 0; i < N; i++) {
+    for (j = 0; j < N; j++) {
+      computeMatrix(matrix_a[i][j], matrix_b[i][j], matrix_result[i][j]);
+   }
+  }
+  time2 = rdtsc();
+  #ifdef BUILD_NAME
+    printf(BUILD_NAME);
+    printf(": ");
+  #endif
+  printf("%llu ticks.\n", time2 - time1);
+}
+

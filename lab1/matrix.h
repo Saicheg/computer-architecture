@@ -1,9 +1,8 @@
 #define K 4
-#define N 1000
+#define N 3000
 #define FLOATMAX 100
 
-void prepareMatrixes();
-void createMatrix(float **** matrix);
+void createMatrixes();
 void freeMatrix(float **** matrix);
 void compute();
 
