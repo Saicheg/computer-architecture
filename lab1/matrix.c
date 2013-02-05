@@ -1,6 +1,7 @@
 #include "matrix.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
 
 float *** matrix_a;
@@ -11,6 +12,8 @@ int i, j, k;
 int main() {
   prepareMatrixes();
 
+  compute();
+
   freeMatrix(&matrix_a);
   freeMatrix(&matrix_b);
   freeMatrix(&matrix_result);
@@ -19,7 +22,6 @@ int main() {
 
 void prepareMatrixes() {
   srand(time(NULL));
-
   createMatrix(&matrix_a);
   createMatrix(&matrix_b);
   createMatrix(&matrix_result);
@@ -47,4 +49,19 @@ void freeMatrix(float **** matrix) {
   }
   free((*matrix));
   (*matrix) = NULL;
+}
+
+void compute() {
+  int i, j, k;
+  struct timespec time1, time2;
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+  for (i = 0; i < N; i++) {
+    for (j = 0; j < N; j++) {
+      for (k = 0; k < K*K; k++) {
+        matrix_result[i][j][k] = matrix_a[i][j][k] * matrix_b[i][j][k];
+      }
+    }
+  }
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+  printf("Calculation time is %ld ns.\n", time2.tv_nsec - time1.tv_nsec);
 }

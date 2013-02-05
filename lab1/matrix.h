@@ -5,4 +5,5 @@
 void prepareMatrixes();
 void createMatrix(float **** matrix);
 void freeMatrix(float **** matrix);
+void compute();
 
