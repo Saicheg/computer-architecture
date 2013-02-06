@@ -4,6 +4,15 @@
 #include <stdio.h>
 #include <time.h>
 
+#ifdef USE_TCMALLOC
+  #include <google/tcmalloc.h>
+  #define CALLOC tc_calloc
+  #define CFREE  tc_cfree
+#else
+  #define CALLOC calloc
+  #define CFREE  free
+#endif
+
 float *** matrix_a;
 float *** matrix_b;
 float *** matrix_result;
@@ -29,33 +38,37 @@ int main() {
 }
 
 void createMatrixes() {
-  matrix_a = (float***) calloc(N, sizeof(float**));
-  matrix_b = (float***) calloc(N, sizeof(float**));
-  matrix_result = (float***) calloc(N, sizeof(float**));
+  unsigned long long int time1, time2;
+  time1 = rdtsc();
+  matrix_a = (float***) CALLOC(N, sizeof(float**));
+  matrix_b = (float***) CALLOC(N, sizeof(float**));
+  matrix_result = (float***) CALLOC(N, sizeof(float**));
   for (i = 0; i < N; i++) {
-    matrix_a[i] = (float**) calloc(N, sizeof(float*));
-    matrix_b[i] = (float**) calloc(N, sizeof(float*));
-    matrix_result[i] = (float**) calloc(N, sizeof(float*));
+    matrix_a[i] = (float**) CALLOC(N, sizeof(float*));
+    matrix_b[i] = (float**) CALLOC(N, sizeof(float*));
+    matrix_result[i] = (float**) CALLOC(N, sizeof(float*));
     for (j = 0; j < N; j++) {
-      matrix_a[i][j] =  (float*) calloc(K*K, sizeof(float));
-      matrix_b[i][j] =  (float*) calloc(K*K, sizeof(float));
-      matrix_result[i][j] =  (float*) calloc(K*K, sizeof(float));
+      matrix_a[i][j] =  (float*) CALLOC(K*K, sizeof(float));
+      matrix_b[i][j] =  (float*) CALLOC(K*K, sizeof(float));
+      matrix_result[i][j] =  (float*) CALLOC(K*K, sizeof(float));
       for (k = 0; k < K*K; k++) {
         matrix_a[i][j][k] = (float) rand() / (float) FLOATMAX;
         matrix_b[i][j][k] = (float) rand() / (float) FLOATMAX;
       }
     }
   }
+  time2 = rdtsc();
+  printf("Allocation took %llu ticks.\n", time2 - time1);
 }
 
 void freeMatrix(float **** matrix) {
   for (i = 0; i < N; i++) {
     for (j = 0; j < N; j++) {
-     free((*matrix)[i][j]); 
+     CFREE((*matrix)[i][j]); 
     }
-    free((*matrix)[i]);
+    CFREE((*matrix)[i]);
   }
-  free((*matrix));
+  CFREE((*matrix));
   (*matrix) = NULL;
 }
 
@@ -82,10 +95,12 @@ void compute() {
    }
   }
   time2 = rdtsc();
+  printf("%llu ticks", time2 - time1);
   #ifdef BUILD_NAME
-    printf(BUILD_NAME);
     printf(": ");
+    printf(BUILD_NAME);
   #endif
-  printf("%llu ticks.\n", time2 - time1);
+  printf("\n");
 }
+
 
