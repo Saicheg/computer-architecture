@@ -1,8 +1,8 @@
 NAME=matrix
 
 BUILD_DEFINE=BUILD_NAME
-CC=gcc
 
+CC=gcc
 CC_FLAGS=-pipe -std=gnu99 -DUSE_TCMALLOC
 CC_DEBUG_FLAGS=-ggdb -Wall -D$(BUILD_DEFINE)="\"GCC debug\""
 CC_RELEASE_FLAGS=-O2 -D$(BUILD_DEFINE)="\"GCC\""
@@ -19,7 +19,7 @@ default: all
 all: clean gcc-debug gcc icc openmp
 
 run: all
-	@echo 'Running matrix multiplicators'
+	@echo 'Running matrix multiplicators.'
 	@./matrix-gcc
 	@./matrix-icc
 	@./matrix-openmp
