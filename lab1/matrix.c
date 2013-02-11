@@ -38,13 +38,13 @@ int main() {
 }
 
 void createMatrixes() {
-  unsigned long long int time1, time2;
-  time1 = rdtsc();
   matrix_a = (float*) CALLOC((N*N*K*K), sizeof(float));
   matrix_b = (float*) CALLOC((N*N*K*K), sizeof(float));
   matrix_result = (float*) CALLOC((N*N*K*K), sizeof(float));
-  time2 = rdtsc();
-  printf("Allocation took %llu ticks.\n", time2 - time1);
+  for (int i = 0; i < N*N*K*K; i++) {
+    matrix_a[i] = (float)rand() / (float)FLOATMAX;
+    matrix_b[i] = (float)rand() / (float)FLOATMAX;
+  }
 }
 
 void freeMatrix(float ** matrix) {
@@ -63,7 +63,7 @@ void computeMatrix(float * a, float * b, float * result) {
 }
 
 void compute() {
-  int i, j;
+  int i;
   unsigned long long time1, time2;
   time1 = rdtsc();
   #ifdef _OPENMP
