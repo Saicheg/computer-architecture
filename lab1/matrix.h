@@ -3,6 +3,6 @@
 #define FLOATMAX 100
 
 void createMatrixes();
-void freeMatrix(float **** matrix);
+void freeMatrix(float ** matrix);
 void compute();
 
