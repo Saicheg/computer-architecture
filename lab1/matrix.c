@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <time.h>
 
+#ifdef _OPENMP
+  #include <omp.h>
+#endif
+
 #ifdef USE_TCMALLOC
   #include <google/tcmalloc.h>
   #define CALLOC tc_calloc
@@ -67,6 +71,7 @@ void compute() {
   unsigned long long time1, time2;
   time1 = rdtsc();
   #ifdef _OPENMP
+    printf("OpenMP: using %d parallel threads...\n", omp_get_max_threads());
     #pragma omp parallel for
   #endif
   for (i = 0; i < N*N; i++) {
