@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda.h>
+#include <cuda_runtime.h>
 
 unsigned long long int rdtsc() {
 	unsigned long long int c, d;
@@ -107,12 +108,21 @@ int main(int argc, char* argv[]) {
 		exit(0);
 	}
 
+	size_t mem_free;
+	size_t mem_total;
+	cudaMemGetInfo(&mem_free, &mem_total);
+
+	printf("CUDA: %zd of %zd MiB free\n",mem_free/(1024*1024),mem_total/(1024*1024));
+	fflush(stdout);
+
 	int a1, a2, b1, b2;
 	a1 = atoi(argv[1]); /* Height of A */
 	a2 = atoi(argv[2]); /* Width of A */
 	b1 = a2; /* Height of B */
 	b2 = atoi(argv[3]); /* Width of B */
 
+	printf("Preparing matrices...\n");
+	fflush(stdout);
 	Matrix A, B, C_cuda, C_cpu;
 
 	A.height = a1;
@@ -143,9 +153,13 @@ int main(int argc, char* argv[]) {
 	unsigned long long time_start_cpu, time_stop_cpu, time_start_cuda,
 			time_stop_cuda;
 
+	printf("CPU working...\n");
+	fflush(stdout);
 	time_start_cpu = rdtsc();
 	CpuMatrixMultiplication(A, B, C_cpu);
 	time_stop_cpu = rdtsc();
+	printf("GPU working...\n");
+	fflush(stdout);
 	time_start_cuda = rdtsc();
 	CudaMatrixMultiplication(A, B, C_cuda);
 	time_stop_cuda = rdtsc();

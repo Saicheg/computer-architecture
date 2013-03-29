@@ -35,8 +35,7 @@
 							</tool>
 							<tool id="nvcc.linker.base.754299181" name="NVCC Linker" superClass="nvcc.linker.base">
 								<option id="nvcc.linker.option.libs.58940246" name="Libraries (-l)" superClass="nvcc.linker.option.libs" valueType="libs">
-									<listOptionValue builtIn="false" value="rt"/>
-									<listOptionValue builtIn="false" value="m"/>
+									<listOptionValue builtIn="false" value="cudart"/>
 								</option>
 								<inputType id="nvcc.linker.input.1959359621" superClass="nvcc.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -104,6 +103,9 @@
 								<inputType id="nvcc.compiler.input.c.1948475210" superClass="nvcc.compiler.input.c"/>
 							</tool>
 							<tool id="nvcc.linker.base.970569351" name="NVCC Linker" superClass="nvcc.linker.base">
+								<option id="nvcc.linker.option.libs.391292697" name="Libraries (-l)" superClass="nvcc.linker.option.libs" valueType="libs">
+									<listOptionValue builtIn="false" value="cudart"/>
+								</option>
 								<inputType id="nvcc.linker.input.392338021" superClass="nvcc.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -125,16 +127,11 @@
 					<sass major="1" minor="2"/>
 					<sass major="1" minor="3"/>
 					<sass major="2" minor="0"/>
-					<sass major="2" minor="1"/>
-					<sass major="3" minor="0"/>
-					<sass major="3" minor="5"/>
 					<ptx major="1" minor="0"/>
 					<ptx major="1" minor="1"/>
 					<ptx major="1" minor="2"/>
 					<ptx major="1" minor="3"/>
 					<ptx major="2" minor="0"/>
-					<ptx major="3" minor="0"/>
-					<ptx major="3" minor="5"/>
 				</executable>
 				<editor-arch major="1" minor="1"/>
 			</storageModule>
@@ -143,6 +140,10 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="lab4.com.nvidia.cuda.ide.exe.1426182285" name="Executable" projectType="com.nvidia.cuda.ide.exe"/>
 	</storageModule>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/lab4"/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="com.nvidia.cuda.ide.configuration.debug.2014084709;com.nvidia.cuda.ide.configuration.debug.2014084709.;nvcc.compiler.base.1698443056;nvcc.compiler.input.cu.1838413598">
@@ -151,12 +152,17 @@
 		<scannerConfigBuildInfo instanceId="com.nvidia.cuda.ide.configuration.debug.2014084709;com.nvidia.cuda.ide.configuration.debug.2014084709.;nvcc.compiler.base.1698443056;nvcc.compiler.input.cpp.748191002">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.nvidia.cuda.ide.build.NVCCPerProjectProfile"/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.nvidia.cuda.ide.configuration.release.1147003310;com.nvidia.cuda.ide.configuration.release.1147003310.;nvcc.compiler.base.1993193227;nvcc.compiler.input.c.1948475210">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.nvidia.cuda.ide.build.NVCCPerProjectProfile"/>
+		</scannerConfigBuildInfo>
 		<scannerConfigBuildInfo instanceId="com.nvidia.cuda.ide.configuration.debug.2014084709;com.nvidia.cuda.ide.configuration.debug.2014084709.;nvcc.compiler.base.1698443056;nvcc.compiler.input.c.1172162631">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.nvidia.cuda.ide.build.NVCCPerProjectProfile"/>
 		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.nvidia.cuda.ide.configuration.release.1147003310;com.nvidia.cuda.ide.configuration.release.1147003310.;nvcc.compiler.base.1993193227;nvcc.compiler.input.cu.222810079">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.nvidia.cuda.ide.build.NVCCPerProjectProfile"/>
+		</scannerConfigBuildInfo>
+		<scannerConfigBuildInfo instanceId="com.nvidia.cuda.ide.configuration.release.1147003310;com.nvidia.cuda.ide.configuration.release.1147003310.;nvcc.compiler.base.1993193227;nvcc.compiler.input.cpp.1993623257">
+			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.nvidia.cuda.ide.build.NVCCPerProjectProfile"/>
+		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope" versionNumber="1">
-		<resource resourceType="PROJECT" workspacePath="/lab4"/>
-	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>
