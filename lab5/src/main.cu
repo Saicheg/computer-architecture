@@ -192,24 +192,6 @@ int main() {
 			correctFlag = 0;
 			break;
 		}
-	/*if(direction)
-	 {
-	 for(int j = 1; j < n; j++)
-	 if(f_hostKey[j - 1] > f_hostKey[j])
-	 {
-	 correctFlag = 0;
-	 break;
-	 }
-	 }
-	 else
-	 {
-	 for(int j = 1; j < n; j++)
-	 if(f_hostKey[j - 1] < f_hostKey[j])
-	 {
-	 correctFlag = 0;
-	 break;
-	 }
-	 }*/
 	printf(correctFlag ? "OK\n" : "Failed!\n");
 
 	cudaEventDestroy(start);
@@ -222,7 +204,5 @@ int main() {
 	if (cudaStatus != cudaSuccess) {
 		return 1;
 	}
-
-	system("pause");
 	return 0;
 }

@@ -10,10 +10,6 @@
 #include <time.h>
 
 /*
-
-
-bitonicSortShardDir - разбиение всей последовательности на битонические.
-						четные блоки сортируют в одном направлении, нечетные в другом.
 bitonicSortShard2   - объединение двух битонических последовательностей в одну
 		четные блоки сортируют в одном направлении, нечетные в другом.
 		один блок обрабатывает block_size * 2 элементов
@@ -34,6 +30,9 @@ __device__ void Comparator(float &keyA, float &keyB, uint dir)
 	}
 }
 
+/**
+ * Divides sequence into bitonic sequences. Odd and even blocks are sorted in different direction.
+ */
 __global__ void bitonicSortShardDir(float* devKey, uint dir)
 {
 	extern __shared__ float sk[];
@@ -44,13 +43,13 @@ __global__ void bitonicSortShardDir(float* devKey, uint dir)
 
 	for(uint size = 2; size <= blockDim.x * 2; size <<= 1)
 	{
-		uint ddd =(dir ^ (( threadIdx.x & (size / 2)) != 0) ) ^ (blockIdx.x & 1);
+		uint direction =(dir ^ (( threadIdx.x & (size / 2)) != 0) ) ^ (blockIdx.x & 1);
 		
 		for(uint stride = size >> 1; stride > 0; stride >>= 1)
 		{
 			__syncthreads();
 			uint pos = 2 * threadIdx.x - ( threadIdx.x & (stride - 1));
-			Comparator(sk[pos], sk[pos + stride], ddd);
+			Comparator(sk[pos], sk[pos + stride], direction);
 		}
 	}
 
@@ -60,15 +59,21 @@ __global__ void bitonicSortShardDir(float* devKey, uint dir)
 	devKey[index + blockDim.x] = sk[threadIdx.x + blockDim.x];
 }
 
+/**
+ * Used to merge two bitonic sequences into one.
+ */
 __global__ void bitonicSortShard2(float* devKey, uint countDir, uint count, uint dir)
 {
 	int num = (blockIdx.x - blockIdx.x % count) / count;
-	uint ddd = (((blockIdx.x - blockIdx.x % countDir) / countDir) % 2) ^ dir;
+	uint direction = (((blockIdx.x - blockIdx.x % countDir) / countDir) % 2) ^ dir;
 	uint stride = blockDim.x * count;
 	uint pos = threadIdx.x + blockIdx.x * blockDim.x + blockDim.x * count * num;
-	Comparator(devKey[pos], devKey[pos + stride], ddd);
+	Comparator(devKey[pos], devKey[pos + stride], direction);
 }
 
+/**
+ * Sorts sequence in one direction.
+ */
 __global__ void bitonicSortShard(float* devKey, uint count, uint dir)
 {
 	extern __shared__ float sk [];
